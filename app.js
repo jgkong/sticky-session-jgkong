@@ -21,6 +21,12 @@ app.use(express.static(__dirname + '/public'));
 // get the app environment from Cloud Foundry
 var appEnv = cfenv.getAppEnv();
 
+var session = require('express-session');
+app.use(session({ secret: 'keyboard cat', name: "JSESSIONID", cookie: { maxAge: 60000 }}));
+
+app.use("/app", function(req, res) {
+  res.end(JSON.stringify(appEnv.app, "", 2));
+});
 // start server on the specified port and binding host
 app.listen(appEnv.port, '0.0.0.0', function() {
   // print a message when the server starts listening
